@@ -1,1 +1,2 @@
-Nothing should be ignored based on the provided file changes. The modification of README.md is a source file that should not be added to .gitignore.
+# Documentation files are source content - no ignores needed for this change set
+# Only architecture, database schema, and object model documentation were added/modified
