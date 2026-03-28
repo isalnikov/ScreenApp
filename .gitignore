@@ -1,2 +1,167 @@
-# Documentation files are source content - no ignores needed for this change set
-# Only architecture, database schema, and object model documentation were added/modified
+```
+# Database migration files - assuming these are generated/config files
+*.xml
+*.sql
+
+# Liquibase specific
+liquibase.properties
+liquibase.log
+
+# Compiled and build artifacts
+*.class
+*.jar
+*.war
+*.ear
+target/
+
+# Dependencies
+lib/
+dependencies/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Build tools
+.gradle/
+build/
+dist/
+
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.venv/
+venv/
+.env/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.tox/
+
+# Java specific
+*.class
+*.jar
+*.war
+*.ear
+*.hprof
+.hprof
+nbproject/
+nb-configuration.xml
+.settings/
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+target/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Database
+*.db
+*.db-journal
+
+# Backup files
+*~
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*.tmp
+*.temp
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# IDE and editor files
+*.swp
+*.swo
+*~
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+.directory
+*.sublime-workspace
+*.sln
+*.csproj
+*.csproj.user
+*.cache
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters
+*.VC.db
+*.VC.VC.opendb
+
+# Log files
+*.log
+.fuse_hidden*
+*.out
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+```
