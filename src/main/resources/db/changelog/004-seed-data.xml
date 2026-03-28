@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Начальные данные: Типы контента -->
+    <changeSet id="004-001" author="system">
+        <comment>Добавление начальных типов контента</comment>
+        <insert tableName="content_types">
+            <column name="name" value="IMAGE"/>
+            <column name="mime_type_pattern" value="image/*"/>
+        </insert>
+        <insert tableName="content_types">
+            <column name="name" value="VIDEO"/>
+            <column name="mime_type_pattern" value="video/*"/>
+        </insert>
+        <insert tableName="content_types">
+            <column name="name" value="TEXT"/>
+            <column name="mime_type_pattern" value="text/plain"/>
+        </insert>
+        <insert tableName="content_types">
+            <column name="name" value="HTML"/>
+            <column name="mime_type_pattern" value="text/html"/>
+        </insert>
+        <insert tableName="content_types">
+            <column name="name" value="STREAM"/>
+            <column name="mime_type_pattern" value="application/x-mpegURL"/>
+        </insert>
+    </changeSet>
+
+    <!-- Начальные данные: Администратор по умолчанию -->
+    <changeSet id="004-002" author="system">
+        <comment>Добавление пользователя администратора по умолчанию</comment>
+        <comment>Пароль: admin123 (BCrypt hash)</comment>
+        <insert tableName="users">
+            <column name="username" value="admin"/>
+            <column name="email" value="admin@screenapp.com"/>
+            <column name="password_hash" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"/>
+            <column name="role" value="ADMIN"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+    <!-- Начальные данные: Пример региона -->
+    <changeSet id="004-003" author="system">
+        <comment>Добавление тестового региона</comment>
+        <insert tableName="regions">
+            <column name="name" value="Москва"/>
+            <column name="code" value="MOW"/>
+        </insert>
+        <insert tableName="regions">
+            <column name="name" value="Санкт-Петербург"/>
+            <column name="code" value="SPB"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
