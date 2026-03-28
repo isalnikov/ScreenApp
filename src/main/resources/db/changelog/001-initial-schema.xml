@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-001" author="system">
+        <comment>Создание таблицы пользователей (users)</comment>
+        <createTable tableName="users">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(20)" defaultValue="USER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001-002" author="system">
+        <comment>Создание таблицы регионов (regions)</comment>
+        <createTable tableName="regions">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(10)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="parent_region_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="regions" baseColumnNames="parent_region_id"
+                                 referencedTableName="regions" referencedColumnNames="id"
+                                 constraintName="fk_regions_parent"/>
+    </changeSet>
+
+    <changeSet id="001-003" author="system">
+        <comment>Создание таблицы экранов (screens)</comment>
+        <createTable tableName="screens">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serial_number" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="region_id" type="BIGINT"/>
+            <column name="location_address" type="TEXT"/>
+            <column name="latitude" type="DECIMAL(10, 8)"/>
+            <column name="longitude" type="DECIMAL(11, 8)"/>
+            <column name="screen_type" type="VARCHAR(20)" defaultValue="TV">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resolution_width" type="INTEGER" defaultValueNumeric="1920"/>
+            <column name="resolution_height" type="INTEGER" defaultValueNumeric="1080"/>
+            <column name="orientation" type="VARCHAR(10)" defaultValue="LANDSCAPE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="OFFLINE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_seen_at" type="TIMESTAMP"/>
+            <column name="firmware_version" type="VARCHAR(20)"/>
+            <column name="ip_address" type="INET"/>
+            <column name="mac_address" type="VARCHAR(17)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="screens" baseColumnNames="region_id"
+                                 referencedTableName="regions" referencedColumnNames="id"
+                                 constraintName="fk_screens_region"/>
+    </changeSet>
+
+    <changeSet id="001-004" author="system">
+        <comment>Создание таблицы типов контента (content_types)</comment>
+        <createTable tableName="content_types">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="mime_type_pattern" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001-005" author="system">
+        <comment>Создание таблицы контента (content)</comment>
+        <createTable tableName="content">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content_type_id" type="INTEGER"/>
+            <column name="file_path" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_size" type="BIGINT"/>
+            <column name="duration_seconds" type="INTEGER"/>
+            <column name="text_content" type="TEXT"/>
+            <column name="html_content" type="TEXT"/>
+            <column name="thumbnail_path" type="VARCHAR(500)"/>
+            <column name="url" type="VARCHAR(500)"/>
+            <column name="checksum" type="VARCHAR(64)"/>
+            <column name="uploaded_by" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+            <column name="metadata" type="JSONB"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="content" baseColumnNames="content_type_id"
+                                 referencedTableName="content_types" referencedColumnNames="id"
+                                 constraintName="fk_content_type"/>
+        <addForeignKeyConstraint baseTableName="content" baseColumnNames="uploaded_by"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_content_uploaded_by"/>
+    </changeSet>
+
+    <changeSet id="001-006" author="system">
+        <comment>Создание таблицы плейлистов (playlists)</comment>
+        <createTable tableName="playlists">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="created_by" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+            <column name="total_duration_seconds" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="version" type="INTEGER" defaultValueNumeric="1"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="playlists" baseColumnNames="created_by"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_playlists_created_by"/>
+    </changeSet>
+
+    <changeSet id="001-007" author="system">
+        <comment>Создание таблицы элементов плейлиста (playlist_items)</comment>
+        <createTable tableName="playlist_items">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="playlist_id" type="BIGINT"/>
+            <column name="content_id" type="BIGINT"/>
+            <column name="position" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration_seconds" type="INTEGER"/>
+            <column name="transition_type" type="VARCHAR(20)" defaultValue="NONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transition_duration" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="playlist_items" baseColumnNames="playlist_id"
+                                 referencedTableName="playlists" referencedColumnNames="id"
+                                 constraintName="fk_playlist_items_playlist" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="playlist_items" baseColumnNames="content_id"
+                                 referencedTableName="content" referencedColumnNames="id"
+                                 constraintName="fk_playlist_items_content"/>
+        <addUniqueConstraint tableName="playlist_items" columnNames="playlist_id, position"
+                             constraintName="uq_playlist_items_playlist_position"/>
+    </changeSet>
+
+    <changeSet id="001-008" author="system">
+        <comment>Создание таблицы расписаний (schedules)</comment>
+        <createTable tableName="schedules">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="playlist_id" type="BIGINT"/>
+            <column name="start_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="DATE"/>
+            <column name="start_time" type="TIME" defaultValue="00:00:00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_time" type="TIME" defaultValue="23:59:59">
+                <constraints nullable="false"/>
+            </column>
+            <column name="days_of_week" type="VARCHAR(20)"/>
+            <column name="priority" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="created_by" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="schedules" baseColumnNames="playlist_id"
+                                 referencedTableName="playlists" referencedColumnNames="id"
+                                 constraintName="fk_schedules_playlist"/>
+        <addForeignKeyConstraint baseTableName="schedules" baseColumnNames="created_by"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_schedules_created_by"/>
+    </changeSet>
+
+    <changeSet id="001-009" author="system">
+        <comment>Создание таблицы привязки расписаний к экранам (screen_schedules)</comment>
+        <createTable tableName="screen_schedules">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="screen_id" type="BIGINT"/>
+            <column name="schedule_id" type="BIGINT"/>
+            <column name="assigned_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="assigned_by" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="screen_schedules" baseColumnNames="screen_id"
+                                 referencedTableName="screens" referencedColumnNames="id"
+                                 constraintName="fk_screen_schedules_screen" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="screen_schedules" baseColumnNames="schedule_id"
+                                 referencedTableName="schedules" referencedColumnNames="id"
+                                 constraintName="fk_screen_schedules_schedule" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="screen_schedules" baseColumnNames="assigned_by"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_screen_schedules_assigned_by"/>
+        <addUniqueConstraint tableName="screen_schedules" columnNames="screen_id, schedule_id"
+                             constraintName="uq_screen_schedules_screen_schedule"/>
+    </changeSet>
+
+    <changeSet id="001-010" author="system">
+        <comment>Создание таблицы групп экранов (screen_groups)</comment>
+        <createTable tableName="screen_groups">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="created_by" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="screen_groups" baseColumnNames="created_by"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_screen_groups_created_by"/>
+    </changeSet>
+
+    <changeSet id="001-011" author="system">
+        <comment>Создание таблицы членов групп экранов (screen_group_members)</comment>
+        <createTable tableName="screen_group_members">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="group_id" type="BIGINT"/>
+            <column name="screen_id" type="BIGINT"/>
+            <column name="added_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="screen_group_members" baseColumnNames="group_id"
+                                 referencedTableName="screen_groups" referencedColumnNames="id"
+                                 constraintName="fk_screen_group_members_group" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="screen_group_members" baseColumnNames="screen_id"
+                                 referencedTableName="screens" referencedColumnNames="id"
+                                 constraintName="fk_screen_group_members_screen" onDelete="CASCADE"/>
+        <addUniqueConstraint tableName="screen_group_members" columnNames="group_id, screen_id"
+                             constraintName="uq_screen_group_members_group_screen"/>
+    </changeSet>
+
+    <changeSet id="001-012" author="system">
+        <comment>Создание таблицы логов показа контента (content_logs)</comment>
+        <createTable tableName="content_logs">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="screen_id" type="BIGINT"/>
+            <column name="content_id" type="BIGINT"/>
+            <column name="playlist_id" type="BIGINT"/>
+            <column name="started_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ended_at" type="TIMESTAMP"/>
+            <column name="duration_seconds" type="INTEGER"/>
+            <column name="status" type="VARCHAR(20)" defaultValue="PLAYED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="error_message" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="content_logs" baseColumnNames="screen_id"
+                                 referencedTableName="screens" referencedColumnNames="id"
+                                 constraintName="fk_content_logs_screen"/>
+        <addForeignKeyConstraint baseTableName="content_logs" baseColumnNames="content_id"
+                                 referencedTableName="content" referencedColumnNames="id"
+                                 constraintName="fk_content_logs_content"/>
+        <addForeignKeyConstraint baseTableName="content_logs" baseColumnNames="playlist_id"
+                                 referencedTableName="playlists" referencedColumnNames="id"
+                                 constraintName="fk_content_logs_playlist"/>
+    </changeSet>
+
+    <changeSet id="001-013" author="system">
+        <comment>Создание таблицы статистики экранов (screen_stats)</comment>
+        <createTable tableName="screen_stats">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="screen_id" type="BIGINT"/>
+            <column name="reported_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cpu_usage" type="DECIMAL(5, 2)"/>
+            <column name="memory_usage" type="DECIMAL(5, 2)"/>
+            <column name="storage_free_gb" type="INTEGER"/>
+            <column name="network_upload_mbps" type="DECIMAL(8, 2)"/>
+            <column name="network_download_mbps" type="DECIMAL(8, 2)"/>
+            <column name="temperature" type="DECIMAL(5, 2)"/>
+            <column name="uptime_seconds" type="BIGINT"/>
+            <column name="current_playlist_id" type="BIGINT"/>
+            <column name="current_content_id" type="BIGINT"/>
+            <column name="playback_status" type="VARCHAR(20)"/>
+            <column name="additional_data" type="JSONB"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="screen_stats" baseColumnNames="screen_id"
+                                 referencedTableName="screens" referencedColumnNames="id"
+                                 constraintName="fk_screen_stats_screen"/>
+        <addForeignKeyConstraint baseTableName="screen_stats" baseColumnNames="current_playlist_id"
+                                 referencedTableName="playlists" referencedColumnNames="id"
+                                 constraintName="fk_screen_stats_playlist"/>
+        <addForeignKeyConstraint baseTableName="screen_stats" baseColumnNames="current_content_id"
+                                 referencedTableName="content" referencedColumnNames="id"
+                                 constraintName="fk_screen_stats_content"/>
+    </changeSet>
+
+    <changeSet id="001-014" author="system">
+        <comment>Создание таблицы аудита действий (audit_log)</comment>
+        <createTable tableName="audit_log">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="action" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_id" type="BIGINT"/>
+            <column name="old_values" type="JSONB"/>
+            <column name="new_values" type="JSONB"/>
+            <column name="ip_address" type="INET"/>
+            <column name="user_agent" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="audit_log" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_audit_log_user"/>
+    </changeSet>
+
+    <changeSet id="001-015" author="system">
+        <comment>Создание таблицы API токенов для экранов (api_tokens)</comment>
+        <createTable tableName="api_tokens">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="screen_id" type="BIGINT"/>
+            <column name="token_hash" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(200)"/>
+            <column name="expires_at" type="TIMESTAMP"/>
+            <column name="last_used_at" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="api_tokens" baseColumnNames="screen_id"
+                                 referencedTableName="screens" referencedColumnNames="id"
+                                 constraintName="fk_api_tokens_screen" onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
