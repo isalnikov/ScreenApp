@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARM Контента - ScreenApp</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ScreenApp - Управление контентом</h1>
+            <nav>
+                <button id="btn-screens" class="nav-btn active">Экраны</button>
+                <button id="btn-content" class="nav-btn">Контент</button>
+                <button id="btn-playlists" class="nav-btn">Плейлисты</button>
+                <button id="btn-schedules" class="nav-btn">Расписания</button>
+                <button id="btn-stats" class="nav-btn">Статистика</button>
+            </nav>
+            <div class="user-info">
+                <span id="username">Admin</span>
+                <button id="btn-logout" class="btn-small">Выйти</button>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <!-- Секция экранов -->
+            <section id="screens-section" class="section active">
+                <div class="section-header">
+                    <h2>Управление экранами</h2>
+                    <button id="btn-add-screen" class="btn-primary">+ Добавить экран</button>
+                </div>
+                <div class="filters">
+                    <input type="text" id="screen-search" placeholder="Поиск по названию или локации...">
+                    <select id="screen-status-filter">
+                        <option value="">Все статусы</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                        <option value="error">Error</option>
+                    </select>
+                    <select id="screen-region-filter">
+                        <option value="">Все регионы</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table id="screens-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Локация</th>
+                                <th>Регион</th>
+                                <th>Статус</th>
+                                <th>Последнее соединение</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="screens-tbody">
+                            <!-- Данные загружаются через JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Секция контента -->
+            <section id="content-section" class="section">
+                <div class="section-header">
+                    <h2>Управление контентом</h2>
+                    <button id="btn-add-content" class="btn-primary">+ Добавить контент</button>
+                </div>
+                <div class="filters">
+                    <input type="text" id="content-search" placeholder="Поиск по названию...">
+                    <select id="content-type-filter">
+                        <option value="">Все типы</option>
+                        <option value="IMAGE">Изображение</option>
+                        <option value="VIDEO">Видео</option>
+                        <option value="TEXT">Текст</option>
+                        <option value="HTML">HTML</option>
+                    </select>
+                </div>
+                <div class="content-grid" id="content-grid">
+                    <!-- Контент загружается через JS -->
+                </div>
+            </section>
+
+            <!-- Секция плейлистов -->
+            <section id="playlists-section" class="section">
+                <div class="section-header">
+                    <h2>Плейлисты</h2>
+                    <button id="btn-add-playlist" class="btn-primary">+ Создать плейлист</button>
+                </div>
+                <div class="table-container">
+                    <table id="playlists-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Количество элементов</th>
+                                <th>Общая длительность</th>
+                                <th>Дата создания</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="playlists-tbody">
+                            <!-- Данные загружаются через JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Секция расписаний -->
+            <section id="schedules-section" class="section">
+                <div class="section-header">
+                    <h2>Расписания показа</h2>
+                    <button id="btn-add-schedule" class="btn-primary">+ Создать расписание</button>
+                </div>
+                <div class="filters">
+                    <input type="text" id="schedule-search" placeholder="Поиск...">
+                    <select id="schedule-status-filter">
+                        <option value="">Все статусы</option>
+                        <option value="active">Активные</option>
+                        <option value="inactive">Неактивные</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table id="schedules-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Плейлист</th>
+                                <th>Экраны</th>
+                                <th>Период действия</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedules-tbody">
+                            <!-- Данные загружаются через JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Секция статистики -->
+            <section id="stats-section" class="section">
+                <div class="section-header">
+                    <h2>Статистика и мониторинг</h2>
+                </div>
+                <div class="stats-dashboard">
+                    <div class="stat-card">
+                        <h3>Всего экранов</h3>
+                        <p id="stat-total-screens">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Online</h3>
+                        <p id="stat-online-screens" class="text-success">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Offline</h3>
+                        <p id="stat-offline-screens" class="text-warning">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Ошибка</h3>
+                        <p id="stat-error-screens" class="text-danger">0</p>
+                    </div>
+                </div>
+                <div class="charts-container">
+                    <canvas id="status-chart"></canvas>
+                    <canvas id="activity-chart"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Модальные окна -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Заголовок</h3>
+                <button id="modal-close" class="btn-close">&times;</button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <!-- Содержимое модального окна -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div id="notifications" class="notifications"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
