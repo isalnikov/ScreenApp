@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Создание функции для автоматического обновления updated_at -->
+    <changeSet id="003-001" author="system">
+        <comment>Создание функции update_updated_at_column()</comment>
+        <sql splitStatements="true" endDelimiter=";">
+            CREATE OR REPLACE FUNCTION update_updated_at_column()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                NEW.updated_at = CURRENT_TIMESTAMP;
+                RETURN NEW;
+            END;
+            $$ language 'plpgsql';
+        </sql>
+    </changeSet>
+
+    <!-- Триггер для таблицы users -->
+    <changeSet id="003-002" author="system">
+        <comment>Триггер для автоматического обновления updated_at в таблице users</comment>
+        <sql splitStatements="true" endDelimiter=";">
+            CREATE TRIGGER update_users_updated_at
+            BEFORE UPDATE ON users
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+        </sql>
+    </changeSet>
+
+    <!-- Триггер для таблицы screens -->
+    <changeSet id="003-003" author="system">
+        <comment>Триггер для автоматического обновления updated_at в таблице screens</comment>
+        <sql splitStatements="true" endDelimiter=";">
+            CREATE TRIGGER update_screens_updated_at
+            BEFORE UPDATE ON screens
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+        </sql>
+    </changeSet>
+
+    <!-- Триггер для таблицы content -->
+    <changeSet id="003-004" author="system">
+        <comment>Триггер для автоматического обновления updated_at в таблице content</comment>
+        <sql splitStatements="true" endDelimiter=";">
+            CREATE TRIGGER update_content_updated_at
+            BEFORE UPDATE ON content
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+        </sql>
+    </changeSet>
+
+    <!-- Триггер для таблицы playlists -->
+    <changeSet id="003-005" author="system">
+        <comment>Триггер для автоматического обновления updated_at в таблице playlists</comment>
+        <sql splitStatements="true" endDelimiter=";">
+            CREATE TRIGGER update_playlists_updated_at
+            BEFORE UPDATE ON playlists
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

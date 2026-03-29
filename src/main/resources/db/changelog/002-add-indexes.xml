@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Индексы для таблицы screens -->
+    <changeSet id="002-001" author="system">
+        <comment>Индексы для таблицы screens</comment>
+        <createIndex tableName="screens" indexName="idx_screens_region">
+            <column name="region_id"/>
+        </createIndex>
+        <createIndex tableName="screens" indexName="idx_screens_status">
+            <column name="status"/>
+        </createIndex>
+        <createIndex tableName="screens" indexName="idx_screens_last_seen">
+            <column name="last_seen_at"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Индексы для таблицы content -->
+    <changeSet id="002-002" author="system">
+        <comment>Индексы для таблицы content</comment>
+        <createIndex tableName="content" indexName="idx_content_type">
+            <column name="content_type_id"/>
+        </createIndex>
+        <createIndex tableName="content" indexName="idx_content_uploaded_by">
+            <column name="uploaded_by"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Индексы для таблицы playlist_items -->
+    <changeSet id="002-003" author="system">
+        <comment>Индексы для таблицы playlist_items</comment>
+        <createIndex tableName="playlist_items" indexName="idx_playlist_items_playlist">
+            <column name="playlist_id"/>
+        </createIndex>
+        <createIndex tableName="playlist_items" indexName="idx_playlist_items_content">
+            <column name="content_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Индексы для таблицы schedules -->
+    <changeSet id="002-004" author="system">
+        <comment>Индексы для таблицы schedules</comment>
+        <createIndex tableName="schedules" indexName="idx_schedules_playlist">
+            <column name="playlist_id"/>
+        </createIndex>
+        <createIndex tableName="schedules" indexName="idx_schedules_dates">
+            <column name="start_date"/>
+            <column name="end_date"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Индексы для таблицы screen_schedules -->
+    <changeSet id="002-005" author="system">
+        <comment>Индексы для таблицы screen_schedules</comment>
+        <createIndex tableName="screen_schedules" indexName="idx_screen_schedules_screen">
+            <column name="screen_id"/>
+        </createIndex>
+        <createIndex tableName="screen_schedules" indexName="idx_screen_schedules_schedule">
+            <column name="schedule_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Индексы для таблицы content_logs -->
+    <changeSet id="002-006" author="system">
+        <comment>Индексы для таблицы content_logs</comment>
+        <createIndex tableName="content_logs" indexName="idx_content_logs_screen">
+            <column name="screen_id"/>
+        </createIndex>
+        <createIndex tableName="content_logs" indexName="idx_content_logs_started_at">
+            <column name="started_at"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Индексы для таблицы screen_stats -->
+    <changeSet id="002-007" author="system">
+        <comment>Индексы для таблицы screen_stats</comment>
+        <createIndex tableName="screen_stats" indexName="idx_screen_stats_screen">
+            <column name="screen_id"/>
+        </createIndex>
+        <createIndex tableName="screen_stats" indexName="idx_screen_stats_reported_at">
+            <column name="reported_at"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Индексы для таблицы audit_log -->
+    <changeSet id="002-008" author="system">
+        <comment>Индексы для таблицы audit_log</comment>
+        <createIndex tableName="audit_log" indexName="idx_audit_log_user">
+            <column name="user_id"/>
+        </createIndex>
+        <createIndex tableName="audit_log" indexName="idx_audit_log_entity">
+            <column name="entity_type"/>
+            <column name="entity_id"/>
+        </createIndex>
+        <createIndex tableName="audit_log" indexName="idx_audit_log_created_at">
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
